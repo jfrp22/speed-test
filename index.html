@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speedtest en GitHub Pages</title>
+    <title>Speedtest Funcional</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -26,43 +26,55 @@
             font-size: 16px;
             border-radius: 5px;
             cursor: pointer;
+            margin: 10px;
         }
-        button:hover {
-            background: #0356b6;
+        button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
         }
-        .progress {
-            height: 20px;
-            background: #e0e0e0;
-            border-radius: 10px;
+        .progress-container {
             margin: 20px 0;
-            overflow: hidden;
         }
-        .progress-bar {
-            height: 100%;
-            background: #0366d6;
-            width: 0%;
-            transition: width 0.3s;
+        .progress-text {
+            margin-bottom: 5px;
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #0366d6;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <h1>Speedtest en GitHub Pages</h1>
-    <p>Prueba la velocidad de tu conexión a internet</p>
+    <h1>Speedtest Funcional</h1>
+    <p>Prueba la velocidad de tu conexión</p>
     
-    <div class="progress" id="progress-container" style="display: none;">
-        <div class="progress-bar" id="progress-bar"></div>
+    <div class="spinner" id="spinner"></div>
+    
+    <div class="progress-container" id="progress-container" style="display: none;">
+        <div class="progress-text" id="progress-text">Iniciando prueba...</div>
     </div>
     
     <div class="result" id="result" style="display: none;">
         <h2>Resultados</h2>
-        <p>Velocidad de descarga: <span id="download-speed">0</span> Mbps</p>
-        <p>Velocidad de subida: <span id="upload-speed">0</span> Mbps</p>
+        <p>Descarga: <span id="download-speed">0</span> Mbps</p>
+        <p>Subida: <span id="upload-speed">0</span> Mbps</p>
         <p>Ping: <span id="ping">0</span> ms</p>
     </div>
     
     <button id="start-test">Iniciar Speedtest</button>
     
-    <script src="https://cdn.jsdelivr.net/npm/speedtest.js@1.0.0/dist/speedtest.min.js"></script>
+    <!-- Usamos speedtest-net que es más confiable -->
+    <script src="https://cdn.jsdelivr.net/npm/speedtest-net@2.2.0/dist/speedtest.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
