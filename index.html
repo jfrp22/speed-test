@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speedtest en GitHub Pages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .result {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+        button {
+            background: #0366d6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0356b6;
+        }
+        .progress {
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: #0366d6;
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <h1>Speedtest en GitHub Pages</h1>
+    <p>Prueba la velocidad de tu conexión a internet</p>
+    
+    <div class="progress" id="progress-container" style="display: none;">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    
+    <div class="result" id="result" style="display: none;">
+        <h2>Resultados</h2>
+        <p>Velocidad de descarga: <span id="download-speed">0</span> Mbps</p>
+        <p>Velocidad de subida: <span id="upload-speed">0</span> Mbps</p>
+        <p>Ping: <span id="ping">0</span> ms</p>
+    </div>
+    
+    <button id="start-test">Iniciar Speedtest</button>
+    
+    <script src="https://cdn.jsdelivr.net/npm/speedtest.js@1.0.0/dist/speedtest.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
