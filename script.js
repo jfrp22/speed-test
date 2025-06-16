@@ -1,77 +1,64 @@
 document.getElementById('start-test').addEventListener('click', function() {
+    const spinner = document.getElementById('spinner');
     const progressContainer = document.getElementById('progress-container');
-    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
     const resultDiv = document.getElementById('result');
+    const startButton = document.getElementById('start-test');
     
-    // Mostrar progreso y ocultar resultados previos
+    // Configurar estado inicial
+    spinner.style.display = 'block';
     progressContainer.style.display = 'block';
     resultDiv.style.display = 'none';
+    startButton.disabled = true;
+    startButton.textContent = 'Probando...';
     
-    // Configuración del speedtest
-    const test = new SpeedTest({
-        maxTime: 15000, // 15 segundos máximo por prueba
-        autoRun: false
+    // Crear instancia del test
+    const test = speedTest({
+        maxTime: 15000,
+        pingCount: 5,
+        maxServers: 3
     });
     
-    // Iniciar prueba de ping
-    progressBar.style.width = '10%';
-    test.on('pingstart', function() {
-        console.log('Prueba de ping iniciada');
+    // Manejar eventos
+    test.on('downloadspeedprogress', function(speed) {
+        const mbps = (speed / 1000000).toFixed(2);
+        progressText.textContent = `Probando descarga: ${mbps} Mbps`;
     });
     
-    test.on('pingend', function(ping) {
-        console.log('Ping:', ping, 'ms');
-        document.getElementById('ping').textContent = ping;
-        progressBar.style.width = '30%';
+    test.on('uploadspeedprogress', function(speed) {
+        const mbps = (speed / 1000000).toFixed(2);
+        progressText.textContent = `Probando subida: ${mbps} Mbps`;
     });
     
-    // Iniciar prueba de descarga
-    test.on('downloadstart', function() {
-        console.log('Prueba de descarga iniciada');
+    test.on('testserver', function(server) {
+        progressText.textContent = `Conectado a: ${server.location}`;
     });
     
-    test.on('downloadprogress', function(progress) {
-        const percent = 30 + (progress * 30 / 100);
-        progressBar.style.width = percent + '%';
-    });
-    
-    test.on('downloadend', function(speed) {
-        const mbps = (speed / 125000).toFixed(2);
-        console.log('Velocidad de descarga:', mbps, 'Mbps');
-        document.getElementById('download-speed').textContent = mbps;
-        progressBar.style.width = '70%';
-    });
-    
-    // Iniciar prueba de subida
-    test.on('uploadstart', function() {
-        console.log('Prueba de subida iniciada');
-    });
-    
-    test.on('uploadprogress', function(progress) {
-        const percent = 70 + (progress * 30 / 100);
-        progressBar.style.width = percent + '%';
-    });
-    
-    test.on('uploadend', function(speed) {
-        const mbps = (speed / 125000).toFixed(2);
-        console.log('Velocidad de subida:', mbps, 'Mbps');
-        document.getElementById('upload-speed').textContent = mbps;
-        progressBar.style.width = '100%';
+    // Cuando se completan las pruebas
+    test.on('data', function(data) {
+        document.getElementById('download-speed').textContent = 
+            (data.download / 1000000).toFixed(2);
+        document.getElementById('upload-speed').textContent = 
+            (data.upload / 1000000).toFixed(2);
+        document.getElementById('ping').textContent = 
+            data.ping.toFixed(0);
         
-        // Mostrar resultados
-        setTimeout(() => {
-            progressContainer.style.display = 'none';
-            resultDiv.style.display = 'block';
-        }, 500);
+        spinner.style.display = 'none';
+        progressContainer.style.display = 'none';
+        resultDiv.style.display = 'block';
+        startButton.disabled = false;
+        startButton.textContent = 'Volver a probar';
     });
     
-    // Manejo de errores
+    // Manejar errores
     test.on('error', function(error) {
         console.error('Error:', error);
-        progressContainer.style.display = 'none';
-        alert('Ocurrió un error durante la prueba: ' + error.message);
+        spinner.style.display = 'none';
+        progressText.textContent = 'Error: ' + error.message;
+        startButton.disabled = false;
+        startButton.textContent = 'Intentar nuevamente';
     });
     
     // Iniciar el test
-    test.run();
+    test.start();
 });
